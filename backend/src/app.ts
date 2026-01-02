@@ -15,8 +15,10 @@ app.use(morgan('dev'));
 
 // Routes
 import authRoutes from './modules/auth/auth.routes';
+import dialogRoutes from './modules/dialog/dialog.routes';
 
 app.use('/api/auth', authRoutes);
+app.use('/api/dialogs', dialogRoutes);
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Nihongo Talk Trainer API is running 🚀');

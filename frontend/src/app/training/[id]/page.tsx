@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation';
+import api from '@/lib/axios';
 import { ChatBubble } from '@/components/dialog/ChatBubble';
 import { VoiceRecorder } from '@/components/dialog/VoiceRecorder';
 import { Button } from '@/components/ui/button';
@@ -18,22 +19,39 @@ export default function TrainingPage() {
     const params = useParams();
     const [messages, setMessages] = useState<Message[]>([]);
     const [currentLineIndex, setCurrentLineIndex] = useState(0);
-
-    // Mock Script
-    const script = [
-        { sender: 'bot', text: 'いらっしゃいませ！', translation: 'Welcome!' },
-        { sender: 'user', text: 'すみません、これいくらですか？', translation: 'Excuse me, how much is this?' },
-        { sender: 'bot', text: 'それは百円です。', translation: 'That is 100 yen.' },
-        { sender: 'user', text: 'じゃ、これください。', translation: 'Okay, I will take this.' },
-    ] as const;
+    const [script, setScript] = useState<any[]>([]); // simplified type for now
+    const [loading, setLoading] = useState(true);
+    const initializedRef = useRef(false);
 
     useEffect(() => {
-        // Initial greeting
-        if (messages.length === 0) {
-            addMessage(script[0].text, 'bot', script[0].translation);
-            playTTS(script[0].text);
+        const fetchDialog = async () => {
+            try {
+                const response = await api.get(`/dialogs/${params.id}`);
+                const dialogData = response.data;
+                if (dialogData && dialogData.script) {
+                    setScript(dialogData.script);
+
+                    // Initial greeting - only if not already initialized
+                    if (!initializedRef.current) {
+                        const firstLine = dialogData.script[0];
+                        if (firstLine) {
+                            addMessage(firstLine.text, 'bot', firstLine.translation);
+                            playTTS(firstLine.text);
+                        }
+                        initializedRef.current = true;
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to fetch dialog", error);
+            } finally {
+                setLoading(false);
+            }
         }
-    }, []);
+
+        if (params.id) {
+            fetchDialog();
+        }
+    }, [params.id]);
 
     const addMessage = (text: string, sender: 'user' | 'bot', translation?: string) => {
         setMessages((prev) => [
@@ -72,6 +90,14 @@ export default function TrainingPage() {
             window.speechSynthesis.speak(utterance);
         }
     };
+
+    if (loading) {
+        return <div className="p-8 text-center">Loading scenario...</div>;
+    }
+
+    if (!script || script.length === 0) {
+        return <div className="p-8 text-center">Scenario not found.</div>;
+    }
 
     return (
         <div className="container mx-auto flex h-[calc(100vh-4rem)] flex-col py-4">

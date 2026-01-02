@@ -15,18 +15,19 @@ export default function DialogsPage() {
     const [dialogs, setDialogs] = useState<Dialog[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // Mock data for MVP if API fails
-    const mockDialogs = [
-        { id: '1', title: 'At the Convenience Store', category: 'Shopping', difficulty: 'N5' },
-        { id: '2', title: 'Ordering at a Restaurant', category: 'Restaurant', difficulty: 'N4' },
-        { id: '3', title: 'Self Introduction', category: 'Social', difficulty: 'N5' },
-    ];
-
     useEffect(() => {
-        // In real app, fetch from API
-        // api.get('/dialogs').then((res) => setDialogs(res.data)).catch(...);
-        setDialogs(mockDialogs);
-        setLoading(false);
+        const fetchDialogs = async () => {
+            try {
+                const response = await api.get('/dialogs');
+                setDialogs(response.data);
+            } catch (error) {
+                console.error('Failed to fetch dialogs:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDialogs();
     }, []);
 
     return (
