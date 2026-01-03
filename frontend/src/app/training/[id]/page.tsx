@@ -3,8 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import api from '@/lib/axios';
-import { ChatBubble } from '@/components/dialog/ChatBubble';
-import { VoiceRecorder } from '@/components/dialog/VoiceRecorder';
+import { ChatBubble } from '@/components/auth/dialog/ChatBubble';
+import { VoiceRecorder } from '@/components/auth/dialog/VoiceRecorder';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 

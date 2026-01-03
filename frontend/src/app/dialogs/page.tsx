@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import api from '@/lib/axios';
-import { DialogCard } from '@/components/dialog/DialogCard';
+import { DialogCard } from '@/components/auth/dialog/DialogCard';
 
 interface Dialog {
     id: string;

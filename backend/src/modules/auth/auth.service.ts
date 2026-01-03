@@ -1,4 +1,4 @@
-import prisma from '../../config/db';
+import prisma from '@/config/db';
 import { hashPassword, comparePassword } from '../../utils/hash';
 import { signToken } from '../../utils/jwt';
 import { User } from '@prisma/client';

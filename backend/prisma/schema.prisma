@@ -16,29 +16,37 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  progress  UserProgress[]
+  progress UserProgress[]
 }
 
 model Dialog {
-  id          String   @id @default(uuid())
-  title       String
-  category    String   // e.g., "Shopping", "Restaurant"
-  difficulty  String   // "N5", "N4", etc.
-  script      Json     // Array of {speaker: "bot"|"user", text: string, translation: string}
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(uuid())
+  title      String
+  category   String // e.g., "Shopping", "Restaurant"
+  difficulty String // "N5", "N4", etc.
+  script     Json // Array of {speaker: "bot"|"user", text: string, translation: string}
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  progress    UserProgress[]
+  progress UserProgress[]
 }
 
 model UserProgress {
-  id        String   @id @default(uuid())
-  userId    String
-  dialogId  String
-  score     Int      // 0-100
-  feedback  String?  // AI Feedback text
+  id String @id @default(uuid())
+
+  userId String
+
+  dialogId String
+
+  score Int // 0-100
+
+  feedback String? // AI Feedback text
+
+  messages Json?
+
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id])
-  dialog    Dialog   @relation(fields: [dialogId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  dialog Dialog @relation(fields: [dialogId], references: [id])
 }
