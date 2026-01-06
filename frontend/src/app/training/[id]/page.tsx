@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import api from '@/lib/axios';
 import { ChatBubble } from '@/components/auth/dialog/ChatBubble';
 import { VoiceRecorder } from '@/components/auth/dialog/VoiceRecorder';
@@ -17,10 +17,12 @@ interface Message {
 
 export default function TrainingPage() {
     const params = useParams();
+    const router = useRouter();
     const [messages, setMessages] = useState<Message[]>([]);
     const [currentLineIndex, setCurrentLineIndex] = useState(0);
     const [script, setScript] = useState<any[]>([]); // simplified type for now
     const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
     const initializedRef = useRef(false);
 
     useEffect(() => {
@@ -60,14 +62,48 @@ export default function TrainingPage() {
         ]);
     };
 
+    const handleDialogComplete = async (finalMessages: Message[]) => {
+        setSaving(true);
+        try {
+            // Real Score Calculation:
+            // Compare user messages with script user lines
+            const userScriptLines = script.filter(l => l.speaker === 'user');
+            const userMessages = finalMessages.filter(m => m.sender === 'user');
+
+            let correctTurns = 0;
+            userMessages.forEach((msg, idx) => {
+                if (userScriptLines[idx] && msg.text.trim().toLowerCase() === userScriptLines[idx].text.trim().toLowerCase()) {
+                    correctTurns++;
+                }
+            });
+
+            const score = userScriptLines.length > 0
+                ? Math.round((correctTurns / userScriptLines.length) * 100)
+                : 100;
+
+            await api.post('/userprogress', {
+                dialogId: params.id,
+                score,
+                messages: finalMessages,
+                feedback: `You completed the scenario with ${score}% accuracy.`
+            });
+
+            router.push('/history');
+        } catch (error) {
+            console.error('Failed to save progress:', error);
+            addMessage('Error: Failed to save progress. Please try again.', 'bot');
+        } finally {
+            setSaving(false);
+        }
+    };
+
     const handleUserTranscript = (text: string) => {
+        if (saving) return;
+
         addMessage(text, 'user');
 
-        // Simple Mock Evaluation & Progression
-        // In real app: compare text with script[currentLineIndex + 1].text
-
         setTimeout(() => {
-            // Mock Bot Reply
+            // Progression
             const nextBotLineIndex = currentLineIndex + 2;
             if (nextBotLineIndex < script.length) {
                 const line = script[nextBotLineIndex];
@@ -76,7 +112,16 @@ export default function TrainingPage() {
                 setCurrentLineIndex(nextBotLineIndex);
             } else {
                 // Dialog finished
-                addMessage('Great job! Scenario complete.', 'bot');
+                const completionMsg = 'Great job! Scenario complete. Saving your progress...';
+                addMessage(completionMsg, 'bot');
+
+                // Construct final messages to include the completion message
+                const finalMessages: Message[] = [
+                    ...messages,
+                    { id: Date.now().toString() + '-user', text, sender: 'user' },
+                    { id: Date.now().toString() + '-bot', text: completionMsg, sender: 'bot' }
+                ];
+                handleDialogComplete(finalMessages);
             }
         }, 1000);
 
@@ -106,6 +151,7 @@ export default function TrainingPage() {
                     {messages.map((msg) => (
                         <ChatBubble key={msg.id} {...msg} />
                     ))}
+                    {saving && <div className="text-center text-sm text-gray-500 italic">Saving scenario...</div>}
                 </CardContent>
                 <div className="border-t p-4 flex justify-center items-center bg-gray-50">
                     <div className="text-center space-y-2">
