@@ -33,3 +33,15 @@ export const findById = (id: string, userId: string) => {
     },
   });
 };
+
+export const create = (data: {
+  userId: string;
+  dialogId: string;
+  score: number;
+  feedback?: string;
+  messages?: any;
+}) => {
+  return db.userProgress.create({
+    data,
+  });
+};
