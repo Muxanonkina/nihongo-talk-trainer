@@ -67,8 +67,11 @@ export default function TrainingPage() {
         try {
             // Real Score Calculation:
             // Compare user messages with script user lines
-            const userScriptLines = script.filter(l => l.speaker === 'user');
+            const userScriptLines = script.filter(l => l.sender === 'user');
             const userMessages = finalMessages.filter(m => m.sender === 'user');
+
+            console.log('User Script Lines (sender=user):', userScriptLines);
+            console.log('User Messages:', userMessages);
 
             let correctTurns = 0;
             userMessages.forEach((msg, idx) => {
@@ -81,7 +84,11 @@ export default function TrainingPage() {
                 ? Math.round((correctTurns / userScriptLines.length) * 100)
                 : 100;
 
+            console.log('Calculated Score:', score);
+
+
             await api.post('/userprogress', {
+
                 dialogId: params.id,
                 score,
                 messages: finalMessages,

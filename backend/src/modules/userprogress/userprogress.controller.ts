@@ -42,6 +42,8 @@ export const createUserProgress = async (req: AuthRequest, res: Response) => {
         }
 
         console.log('Creating UserProgress with:', { userId, dialogId, score, feedback, messagesLength: messages?.length });
+        console.log('DEBUG: req.user:', req.user); // Verify user is authenticated
+
 
         const newUserProgress = await userProgressService.create({
             userId,
