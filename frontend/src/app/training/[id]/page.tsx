@@ -62,10 +62,31 @@ export default function TrainingPage() {
         ]);
     };
 
+    // Similarity calculation function for fuzzy matching
+    const calculateSimilarity = (str1: string, str2: string): number => {
+        const s1 = str1.trim().toLowerCase();
+        const s2 = str2.trim().toLowerCase();
+
+        // Exact match gets 100%
+        if (s1 === s2) return 100;
+
+        // Character overlap method - good for Japanese text with voice recognition
+        const chars1 = new Set(s1.split(''));
+        const chars2 = new Set(s2.split(''));
+
+        const intersection = new Set([...chars1].filter(x => chars2.has(x)));
+        const union = new Set([...chars1, ...chars2]);
+
+        // Avoid division by zero
+        if (union.size === 0) return 0;
+
+        return Math.round((intersection.size / union.size) * 100);
+    };
+
     const handleDialogComplete = async (finalMessages: Message[]) => {
         setSaving(true);
         try {
-            // Real Score Calculation:
+            // Real Score Calculation with Similarity Matching:
             // Compare user messages with script user lines
             const userScriptLines = script.filter(l => l.sender === 'user');
             const userMessages = finalMessages.filter(m => m.sender === 'user');
@@ -73,17 +94,23 @@ export default function TrainingPage() {
             console.log('User Script Lines (sender=user):', userScriptLines);
             console.log('User Messages:', userMessages);
 
-            let correctTurns = 0;
+            let totalScore = 0;
+            const similarities: number[] = [];
+
             userMessages.forEach((msg, idx) => {
-                if (userScriptLines[idx] && msg.text.trim().toLowerCase() === userScriptLines[idx].text.trim().toLowerCase()) {
-                    correctTurns++;
+                if (userScriptLines[idx]) {
+                    const similarity = calculateSimilarity(msg.text, userScriptLines[idx].text);
+                    similarities.push(similarity);
+                    totalScore += similarity;
+                    console.log(`Turn ${idx + 1}: "${msg.text}" vs "${userScriptLines[idx].text}" = ${similarity}%`);
                 }
             });
 
             const score = userScriptLines.length > 0
-                ? Math.round((correctTurns / userScriptLines.length) * 100)
+                ? Math.round(totalScore / userScriptLines.length)
                 : 100;
 
+            console.log('Similarity scores per turn:', similarities);
             console.log('Calculated Score:', score);
 
 

@@ -8,7 +8,8 @@ export const getUserProgresses = async (req: AuthRequest, res: Response) => {
         const userProgresses = await userProgressService.findAllByUserId(userId);
         res.json(userProgresses);
     } catch (error) {
-        res.status(500).json({ message: 'Failed to get user progresses.' });
+        console.error('Get User Progresses Error:', error);
+        res.status(500).json({ message: 'Failed to get user progresses.', error: String(error) });
     }
 };
 
