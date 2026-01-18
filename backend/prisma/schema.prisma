@@ -1,52 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
+  id        String         @id @default(uuid())
+  email     String         @unique
   password  String
   name      String?
-  level     String   @default("N5") // N5, N4, N3, N2, N1
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  progress UserProgress[]
+  level     String         @default("N5")
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  progress  UserProgress[]
 }
 
 model Dialog {
-  id         String   @id @default(uuid())
+  id         String         @id @default(uuid())
   title      String
-  category   String // e.g., "Shopping", "Restaurant"
-  difficulty String // "N5", "N4", etc.
-  script     Json // Array of {speaker: "bot"|"user", text: string, translation: string}
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  progress UserProgress[]
+  category   String
+  difficulty String
+  script     Json
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  progress   UserProgress[]
 }
 
 model UserProgress {
-  id String @id @default(uuid())
-
-  userId String
-
-  dialogId String
-
-  score Int // 0-100
-
-  feedback String? // AI Feedback text
-
-  messages Json?
-
+  id        String   @id @default(uuid())
+  userId    String
+  dialogId  String
+  score     Int
+  feedback  String?
   createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id])
-
-  dialog Dialog @relation(fields: [dialogId], references: [id])
+  messages  Json?
+  dialog    Dialog   @relation(fields: [dialogId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
