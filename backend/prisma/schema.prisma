@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-  id        String         @id @default(uuid())
-  email     String         @unique
-  password  String
-  name      String?
-  level     String         @default("N5")
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
-  progress  UserProgress[]
+  id          String         @id @default(uuid())
+  email       String         @unique
+  password    String
+  name        String?
+  level       String         @default("N5")
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  progress    UserProgress[]
+  jlptResults JLPTResult[]
 }
 
 model Dialog {
@@ -39,4 +40,29 @@ model UserProgress {
   messages  Json?
   dialog    Dialog   @relation(fields: [dialogId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
+}
+
+model JLPTTest {
+  id        String   @id @default(uuid())
+  testId    String   @unique
+  title     String
+  level     String   // N1, N2, N3, N4, N5
+  category  String   // Vocabulary, Grammar, Reading, Listening
+  sections  Json     // Array of sections with questions
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model JLPTResult {
+  id             String   @id @default(uuid())
+  userId         String
+  testId         String
+  level          String
+  category       String
+  score          Int      // Percentage (0-100)
+  totalQuestions Int
+  correctAnswers Int
+  answers        Json     // Array of { questionId, selectedOption, isCorrect }
+  createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id])
 }

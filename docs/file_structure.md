@@ -1,140 +1,155 @@
-<!-- ROOT-File_Sturcuture -->
+# Nihongo Talk Trainer - File Structure
+
+## Root Structure
+
+```
 nihongo-talk-trainer/
-├── frontend/
-├── backend/
-├── docs/
+├── frontend/              # Next.js frontend application
+├── backend/               # Express.js backend API
+├── docs/                  # Project documentation
+├── .gitignore
 └── README.md
+```
 
-<!-- Frontend file structure (рекомендуемая) -->
+---
 
-nihongo-talk-trainer/
-├── app/                          # App Router (Next.js 13+)
-│   ├── (auth)/                   # Auth-related routes group
+## Frontend Structure (Actual)
+
+```
+frontend/
+├── src/
+│   ├── app/                          # Next.js App Router
 │   │   ├── login/
-│   │   │   └── page.tsx
+│   │   │   └── page.tsx              # Login page
+│   │   │
 │   │   ├── register/
-│   │   │   └── page.tsx
-│   │   └── layout.tsx            # Optional: auth layout without main navigation
+│   │   │   └── page.tsx              # Registration page
+│   │   │
+│   │   ├── dialogs/
+│   │   │   └── page.tsx              # Dialog scenarios list
+│   │   │
+│   │   ├── training/
+│   │   │   └── [id]/
+│   │   │       └── page.tsx          # Training session (dynamic route)
+│   │   │
+│   │   ├── history/
+│   │   │   └── page.tsx              # User progress history
+│   │   │
+│   │   ├── layout.tsx                # Root layout
+│   │   └── page.tsx                  # Home/landing page
 │   │
-│   ├── (app)/                    # Main authenticated app routes group
-│   │   ├── dashboard/            # Home / Dashboard
-│   │   │   └── page.tsx
+│   ├── components/
+│   │   ├── ui/                       # Shadcn/ui components
+│   │   │   ├── button.tsx
+│   │   │   ├── card.tsx
+│   │   │   ├── dialog.tsx
+│   │   │   ├── input.tsx
+│   │   │   ├── label.tsx
+│   │   │   └── select.tsx
 │   │   │
-│   │   ├── dialogs/              # List of dialog scenarios
-│   │   │   └── page.tsx
+│   │   ├── layout/
+│   │   │   ├── Navbar.tsx
+│   │   │   └── Footer.tsx
 │   │   │
-│   │   ├── training/             # Training session
-│   │   │   ├── [id]/             # Dynamic route for specific dialog
-│   │   │   │   └── page.tsx      # Main training screen (chat, voice, evaluation)
-│   │   │   └── page.tsx          # Optional: training intro or selection
-│   │   │
-│   │   ├── history/              # Learning history
-│   │   │   └── page.tsx
-│   │   │
-│   │   ├── admin/                # Admin panel (protected)
-│   │   │   ├── scenarios/
-│   │   │   │   ├── page.tsx      # List of scenarios
-│   │   │   │   ├── new/
-│   │   │   │   │   └── page.tsx  # Add new scenario
-│   │   │   │   └── [id]/
-│   │   │   │       └── page.tsx  # Edit scenario
-│   │   │   └── page.tsx          # Admin dashboard
-│   │   │
-│   │   └── layout.tsx            # Main layout with navbar, footer, etc.
+│   │   └── auth/
+│   │       ├── LoginForm.tsx
+│   │       ├── RegisterForm.tsx
+│   │       │
+│   │       └── dialog/               # Dialog-related components
+│   │           ├── ChatBubble.tsx
+│   │           ├── DialogCard.tsx
+│   │           └── VoiceRecorder.tsx
 │   │
-│   ├── globals.css               # Global styles
-│   ├── layout.tsx                # Root layout (html, body, providers)
-│   ├── page.tsx                  # Landing / home page (redirect to login or dashboard)
-│   └── not-found.tsx             # 404 page
+│   └── lib/
+│       ├── axios.ts                  # API client configuration
+│       └── utils.ts                  # Utility functions
 │
-├── components/                   # Reusable UI components
-│   ├── ui/                       # Shadcn/ui or custom primitive components
-│   │   ├── button.tsx
-│   │   ├── card.tsx
-│   │   ├── dialog.tsx
-│   │   ├── input.tsx
-│   │   ├── select.tsx
-│   │   ├── table.tsx
-│   │   └── ...
-│   │
-│   ├── layout/
-│   │   ├── Navbar.tsx
-│   │   ├── Footer.tsx
-│   │   └── LanguageSwitcher.tsx
-│   │
-│   ├── auth/
-│   │   ├── LoginForm.tsx
-│   │   └── RegisterForm.tsx
-│   │
-│   ├── dialog/
-│   │   ├── DialogCard.tsx        # Card in scenario list
-│   │   ├── ChatBubble.tsx        # Message bubble in training chat
-│   │   ├── VoiceRecorder.tsx     # Mic button + recording logic
-│   │   ├── PronunciationScore.tsx # Score display + feedback
-│   │   └── TextToSpeechButton.tsx
-│   │
-│   ├── history/
-│   │   ├── HistoryTable.tsx
-│   │   └── ProgressChart.tsx
-│   │
-│   └── admin/
-│       ├── ScenarioForm.tsx      # Shared form for add/edit
-│       └── ScenarioList.tsx
+├── public/                           # Static assets
+├── certificates/                     # SSL certificates (for HTTPS)
+├── components.json                   # Shadcn/ui configuration
+├── next.config.ts
+├── tsconfig.json
+├── package.json
+└── .env                              # Environment variables (gitignored)
+```
 
+---
 
-<!-- Backend file structure (рекомендуемая) -->
+## Backend Structure (Actual)
 
+```
 backend/
 ├── src/
-│   ├── app.ts                # создание express app
-│   ├── server.ts             # запуск сервера
+│   ├── app.ts                        # Express app setup
+│   ├── server.ts                     # Server entry point
 │   │
 │   ├── config/
-│   │   ├── env.ts            # env variables
-│   │   └── db.ts             # prisma client
+│   │   └── db.ts                     # Prisma client instance
 │   │
-│   ├── modules/              # domain-based структура
+│   ├── modules/
 │   │   ├── auth/
 │   │   │   ├── auth.controller.ts
 │   │   │   ├── auth.service.ts
 │   │   │   └── auth.routes.ts
 │   │   │
-│   │   ├── users/
-│   │   │   ├── user.controller.ts
-│   │   │   ├── user.service.ts
-│   │   │   └── user.routes.ts
-│   │   │
-│   │   ├── dialogs/
+│   │   ├── dialog/
 │   │   │   ├── dialog.controller.ts
-│   │   │   ├── dialog.service.ts
 │   │   │   └── dialog.routes.ts
 │   │   │
-│   │   ├── progress/
-│   │   │   ├── progress.controller.ts
-│   │   │   ├── progress.service.ts
-│   │   │   └── progress.routes.ts
-│   │   │
-│   │   └── ai/
-│   │       ├── ai.controller.ts
-│   │       ├── ai.service.ts
-│   │       └── ai.routes.ts
+│   │   └── userprogress/
+│   │       ├── userprogress.controller.ts
+│   │       ├── userprogress.service.ts
+│   │       └── userprogress.routes.ts
 │   │
 │   ├── middlewares/
-│   │   ├── auth.middleware.ts   # JWT check
-│   │   └── error.middleware.ts  # error handling
+│   │   └── auth.middleware.ts        # JWT authentication
 │   │
 │   ├── utils/
-│   │   ├── jwt.ts
-│   │   └── hash.ts              # password hashing
+│   │   └── jwt.ts                    # JWT utilities
 │   │
-│   └── routes.ts                # объединение всех роутов
+│   └── scripts/                      # Utility scripts
 │
 ├── prisma/
-│   ├── schema.prisma
-│   └── migrations/
+│   ├── schema.prisma                 # Database schema
+│   └── migrations/                   # Database migrations
 │
-├── .env
-├── .env.example
+├── dist/                             # Compiled TypeScript output
 ├── package.json
 ├── tsconfig.json
-└── README.md
+└── .env                              # Environment variables (gitignored)
+```
+
+---
+
+## Key Differences from Recommended Structure
+
+### Frontend
+- ❌ No route groups `(auth)` and `(app)` - using flat structure
+- ❌ No `dashboard` page yet
+- ❌ No `admin` panel yet
+- ✅ Dialog components located in `components/auth/dialog/` instead of `components/dialog/`
+
+### Backend
+- ❌ No `users` module (user logic in `auth` module)
+- ❌ No `ai` module yet
+- ❌ No `error.middleware.ts` yet
+- ❌ No `hash.ts` utility (using bcryptjs directly)
+- ❌ No centralized `routes.ts` file
+- ✅ Module named `userprogress` instead of `progress`
+- ✅ Some modules missing `.service.ts` files (logic in controllers)
+
+---
+
+## Environment Variables
+
+### Frontend (.env)
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:5000/api  # Backend API URL
+```
+
+### Backend (.env)
+```bash
+DATABASE_URL=postgresql://...                   # PostgreSQL connection string
+JWT_SECRET=your-secret-key                      # JWT signing key
+PORT=5000                                       # Server port
+```

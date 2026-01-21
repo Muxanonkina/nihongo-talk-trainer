@@ -1,0 +1,92 @@
+{
+    "testId": "n2_goi_01",
+    "title": "N2 Vocabulary - Test 1 (直接対策)",
+    "level": "N2",
+    "category": "Vocabulary",
+    "sections": [
+        {
+            "sectionName": "Mondai 1: Kanji Reading",
+            "instruction": "_____の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。",
+            "questions": [
+                {
+                    "id": "q1",
+                    "text": "新しい**組織**を作る。",
+                    "options": [
+                        {
+                            "id": "1",
+                            "text": "しょしき"
+                        },
+                        {
+                            "id": "2",
+                            "text": "そうしき"
+                        },
+                        {
+                            "id": "3",
+                            "text": "そしき"
+                        },
+                        {
+                            "id": "4",
+                            "text": "せいしき"
+                        }
+                    ],
+                    "correctAnswer": "3",
+                    "explanation": ""
+                },
+                {
+                    "id": "q2",
+                    "text": "彼は**優秀**な学生だ。",
+                    "options": [
+                        {
+                            "id": "1",
+                            "text": "ゆうしゅう"
+                        },
+                        {
+                            "id": "2",
+                            "text": "ゆしゅう"
+                        },
+                        {
+                            "id": "3",
+                            "text": "ゆうしゅ"
+                        },
+                        {
+                            "id": "4",
+                            "text": "ゆしゅ"
+                        }
+                    ],
+                    "correctAnswer": "1",
+                    "explanation": ""
+                }
+            ]
+        },
+        {
+            "sectionName": "Mondai 2: Contextual Usage",
+            "instruction": "_____に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
+            "questions": [
+                {
+                    "id": "q3",
+                    "text": "この問題は_____難しい。",
+                    "options": [
+                        {
+                            "id": "1",
+                            "text": "かなり"
+                        },
+                        {
+                            "id": "2",
+                            "text": "とても"
+                        },
+                        {
+                            "id": "3",
+                            "text": "すごく"
+                        },
+                        {
+                            "id": "4",
+                            "text": "たいへん"
+                        }
+                    ],
+                    "correctAnswer": "1",
+                    "explanation": ""
+                }
+            ]
+        }
+    ]
+}
