@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -24,7 +24,7 @@ model Dialog {
   title      String
   category   String
   difficulty String
-  script     Json
+  script     String
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
   progress   UserProgress[]
@@ -37,7 +37,7 @@ model UserProgress {
   score     Int
   feedback  String?
   createdAt DateTime @default(now())
-  messages  Json?
+  messages  String?
   dialog    Dialog   @relation(fields: [dialogId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 }
@@ -48,7 +48,7 @@ model JLPTTest {
   title     String
   level     String   // N1, N2, N3, N4, N5
   category  String   // Vocabulary, Grammar, Reading, Listening
-  sections  Json     // Array of sections with questions
+  sections  String     // Array of sections with questions
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -62,7 +62,7 @@ model JLPTResult {
   score          Int      // Percentage (0-100)
   totalQuestions Int
   correctAnswers Int
-  answers        Json     // Array of { questionId, selectedOption, isCorrect }
+  answers        String     // Array of { questionId, selectedOption, isCorrect }
   createdAt      DateTime @default(now())
   user           User     @relation(fields: [userId], references: [id])
 }

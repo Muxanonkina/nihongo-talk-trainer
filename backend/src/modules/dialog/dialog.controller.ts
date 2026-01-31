@@ -38,7 +38,12 @@ export const getDialogById = async (req: Request, res: Response) => {
             return;
         }
 
-        res.status(200).json(dialog);
+        const parsedDialog = {
+            ...dialog,
+            script: JSON.parse(dialog.script as unknown as string)
+        };
+
+        res.status(200).json(parsedDialog);
     } catch (error) {
         console.error('Error fetching dialog:', error);
         res.status(500).json({ message: 'Internal Server Error' });

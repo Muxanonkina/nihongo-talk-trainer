@@ -37,7 +37,7 @@ async function seedJLPTTests() {
                 title: data.title,
                 level: data.level,
                 category: data.category,
-                sections: data.sections,
+                sections: JSON.stringify(data.sections),
             },
         });
 

@@ -86,7 +86,8 @@ export class JLPTService {
 
         if (dbTest) {
             // Remove correct answers from sections
-            const sections = (dbTest.sections as any[]).map((section: Section) => ({
+            const parsedSections = JSON.parse(dbTest.sections as unknown as string) as Section[];
+            const sections = parsedSections.map((section: Section) => ({
                 ...section,
                 questions: section.questions.map((q) => {
                     const { correctAnswer, explanation, ...questionWithoutAnswer } = q;
@@ -147,7 +148,7 @@ export class JLPTService {
                 title: dbTest.title,
                 level: dbTest.level,
                 category: dbTest.category,
-                sections: dbTest.sections as Section[],
+                sections: JSON.parse(dbTest.sections as unknown as string) as Section[],
             };
         } else {
             // Fallback to JSON
@@ -193,7 +194,7 @@ export class JLPTService {
                 score,
                 totalQuestions,
                 correctAnswers,
-                answers: results,
+                answers: JSON.stringify(results),
             },
         });
 

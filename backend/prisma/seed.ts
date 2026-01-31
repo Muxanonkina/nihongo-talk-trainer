@@ -53,7 +53,10 @@ async function main() {
 
         if (!existing) {
             const dialog = await prisma.dialog.create({
-                data: scenario,
+                data: {
+                    ...scenario,
+                    script: JSON.stringify(scenario.script),
+                },
             });
             console.log(`Created dialog with id: ${dialog.id}`);
         } else {
