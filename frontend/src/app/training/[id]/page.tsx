@@ -77,7 +77,7 @@ export default function TrainingPage() {
         const intersection = new Set([...chars1].filter(x => chars2.has(x)));
         const union = new Set([...chars1, ...chars2]);
 
-        // Avoid division by zero
+
         if (union.size === 0) return 0;
 
         return Math.round((intersection.size / union.size) * 100);
